@@ -1,0 +1,11 @@
+koreUserId,botId,accountId,Authorization,X-Auth-token,X-CORRELATION-ID,customerId,accountNumber,numOfTransactions,status,startDate,endDate,sort,transactionAmount,category,debitOrCredit,example, statusCode
+user1,bot1,acc1,auth1,token1,12345,cust1,accNum1,10,Active,2021-01-01,2021-01-31,asc,1000,Food,Debit,ex1,200
+user2,bot2,acc2,auth2,token2,12346,cust2,accNum2,15,Inactive,2021-02-01,2021-02-28,desc,2000,Transport,Credit,ex2,201
+user3,bot3,acc3,auth3,token3,12347,cust3,accNum3,20,Active,2021-03-01,2021-03-31,asc,1500,Entertainment,Debit,ex3,202
+user4,bot4,acc4,auth4,token4,12348,cust4,accNum4,25,Inactive,2021-04-01,2021-04-30,desc,2500,Health,Credit,ex4,203
+user5,bot5,acc5,auth5,token5,12349,cust5,accNum5,30,Active,2021-05-01,2021-05-31,asc,3000,Education,Debit,ex5,204
+user6,bot6,acc6,auth6,token6,12350,cust6,accNum6,35,Inactive,2021-06-01,2021-06-30,desc,3500,Shopping,Credit,ex6,205
+user7,bot7,acc7,auth7,token7,12351,cust7,accNum7,40,Active,2021-07-01,2021-07-31,asc,4000,Food,Debit,ex7,206
+user8,bot8,acc8,auth8,token8,12352,cust8,accNum8,45,Inactive,2021-08-01,2021-08-31,desc,4500,Transport,Credit,ex8,207
+user9,bot9,acc9,auth9,token9,12353,cust9,accNum9,50,Active,2021-09-01,2021-09-30,asc,5000,Entertainment,Debit,ex9,208
+user10,bot10,acc10,auth10,token10,12354,cust10,accNum10,55,Inactive,2021-10-01,2021-10-31,desc,5500,Health,Credit,ex10,209
