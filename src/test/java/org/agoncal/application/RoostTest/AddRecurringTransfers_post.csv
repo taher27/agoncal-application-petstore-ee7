@@ -1,0 +1,11 @@
+koreUserId,botId,userCode,accountId,Authorization,customerId,amount,sourceAccountId,targetAccountId,currency,status,scheduledDate,recurringOptions,example,statusCode
+KU123,BOT456,UC789,AC1011,AUTH1213,1001,500.00,SA1415,TA1617,USD,Completed,1616544000000,{"amountType":"Fixed","frequency":{"iterate":"Weekly","duration":{"numberOfTransfers":3}}},EX1910,200
+KU124,BOT457,UC790,AC1012,AUTH1214,1002,1000.00,SA1416,TA1618,EUR,Pending,1616630400000,{"amountType":"Fixed","frequency":{"iterate":"Monthly","duration":{"numberOfTransfers":6}}},EX1911,201
+KU125,BOT458,UC791,AC1013,AUTH1215,1003,1500.00,SA1417,TA1619,GBP,Failed,1616716800000,{"amountType":"Variable","frequency":{"iterate":"Daily","duration":{"numberOfTransfers":10}}},EX1912,202
+KU126,BOT459,UC792,AC1014,AUTH1216,1004,2000.00,SA1418,TA1620,JPY,Completed,1616803200000,{"amountType":"Fixed","frequency":{"iterate":"Yearly","duration":{"numberOfTransfers":1}}},EX1913,203
+KU127,BOT460,UC793,AC1015,AUTH1217,1005,2500.00,SA1419,TA1621,AUD,Processing,1616889600000,{"amountType":"Variable","frequency":{"iterate":"Quarterly","duration":{"numberOfTransfers":4}}},EX1914,204
+KU128,BOT461,UC794,AC1016,AUTH1218,1006,3000.00,SA1420,TA1622,CAD,Completed,1616976000000,{"amountType":"Fixed","frequency":{"iterate":"Biweekly","duration":{"numberOfTransfers":7}}},EX1915,205
+KU129,BOT462,UC795,AC1017,AUTH1219,1007,3500.00,SA1421,TA1623,CHF,Pending,1617062400000,{"amountType":"Variable","frequency":{"iterate":"Fortnightly","duration":{"numberOfTransfers":5}}},EX1916,206
+KU130,BOT463,UC796,AC1018,AUTH1220,1008,4000.00,SA1422,TA1624,INR,Failed,1617148800000,{"amountType":"Fixed","frequency":{"iterate":"Weekly","duration":{"numberOfTransfers":9}}},EX1917,207
+KU131,BOT464,UC797,AC1019,AUTH1221,1009,4500.00,SA1423,TA1625,CNY,Completed,1617235200000,{"amountType":"Variable","frequency":{"iterate":"Monthly","duration":{"numberOfTransfers":8}}},EX1918,208
+KU132,BOT465,UC798,AC1020,AUTH1222,1010,5000.00,SA1424,TA1626,BRL,Processing,1617321600000,{"amountType":"Fixed","frequency":{"iterate":"Yearly","duration":{"numberOfTransfers":2}}},EX1919,209

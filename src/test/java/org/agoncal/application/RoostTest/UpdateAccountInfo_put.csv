@@ -1,0 +1,11 @@
+koreUserId,botId,accountId,Authorization,X-Auth-token,X-CORRELATION-ID,accountNumber,customerId,email,alternatePhoneNumber,isAlternateMobileNumber,phone,isPrimaryMobileNumber,location,isStatement,statusCode
+KU123,BOT321,AC987,Auth4567,Token1234,10001,1042345,1045300,John@gmail.com,9876543210,false,1234567890,true,NewYork,true,200
+KU124,BOT322,AC988,Auth4568,Token1235,10002,1042346,1045301,Smith@gmail.com,9876543211,false,1234567891,true,Chicago,true,200
+KU125,BOT323,AC989,Auth4569,Token1236,10003,1042347,1045302,Michael@gmail.com,9876543212,false,1234567892,true,LosAngeles,true,200
+KU126,BOT324,AC990,Auth4570,Token1237,10004,1042348,1045303,Laura@gmail.com,9876543213,false,1234567893,true,SanFrancisco,true,200
+KU127,BOT325,AC991,Auth4571,Token1238,10005,1042349,1045304,Emma@gmail.com,9876543214,false,1234567894,true,Austin,true,200
+KU128,BOT326,AC992,Auth4572,Token1239,10006,1042350,1045305,Olivia@gmail.com,9876543215,false,1234567895,true,Dallas,true,200
+KU129,BOT327,AC993,Auth4573,Token1240,10007,1042351,1045306,Noah@gmail.com,9876543216,false,1234567896,true,Houston,true,200
+KU130,BOT328,AC994,Auth4574,Token1241,10008,1042352,1045307,Liam@gmail.com,9876543217,false,1234567897,true,Phoenix,true,200
+KU131,BOT329,AC995,Auth4575,Token1242,10009,1042353,1045308,Sophia@gmail.com,9876543218,false,1234567898,true,Philadelphia,true,200
+KU132,BOT330,AC996,Auth4576,Token1243,10010,1042354,1045309,Ava@gmail.com,9876543219,false,1234567899,true,SanAntonio,true,200
