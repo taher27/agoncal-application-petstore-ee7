@@ -1,0 +1,11 @@
+username,id,firstName,lastName,email,password,phone,userStatus
+user1,1,John,Doe,johndoe@mail.com,password1,1234567890,1
+user2,2,Jane,Smith,janesmith@mail.com,password2,0987654321,0
+user3,3,Michael,Johnson,michaeljohnson@mail.com,password3,1122334455,1
+user4,4,Emily,Williams,emilywilliams@mail.com,password4,2233445566,0
+user5,5,David,Brown,davidbrown@mail.com,password5,3344556677,1
+user6,6,Maria,Davis,mariadavis@mail.com,password6,4455667788,0
+user7,7,James,Miller,jamesmiller@mail.com,password7,5566778899,1
+user8,8,Jennifer,Wilson,jenniferwilson@mail.com,password8,6677889900,0
+user9,9,Robert,Moore,robertmoore@mail.com,password9,7788990011,1
+user10,10,Linda,Taylor,lindataylor@mail.com,password10,8899001122,0

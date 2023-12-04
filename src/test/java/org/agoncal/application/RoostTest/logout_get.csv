@@ -1,0 +1,11 @@
+UserID,FirstName,LastName,Email,DateOfBirth,PhoneNumber
+1,John,Doe,johndoe@gmail.com,1980-05-22,1234567890
+2,Jane,Smith,janesmith@gmail.com,1990-10-15,0987654321
+3,Michael,Johnson,mjohnson@gmail.com,1975-06-30,1122334455
+4,Sarah,Williams,swilliams@gmail.com,1985-03-14,2233445566
+5,David,Brown,dbrown@gmail.com,1992-07-25,3344556677
+6,Emily,Jones,ejones@gmail.com,1987-11-02,4455667788
+7,Robert,Miller,rmiller@gmail.com,1978-12-09,5566778899
+8,Jessica,Davis,jdavis@gmail.com,1989-04-28,6677889900
+9,William,Garcia,wgarcia@gmail.com,1983-09-16,7788990011
+10,Elizabeth,Rodriguez,erodriguez@gmail.com,1991-02-20,8899001122
