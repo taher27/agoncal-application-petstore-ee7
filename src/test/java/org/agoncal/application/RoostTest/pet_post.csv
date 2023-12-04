@@ -1,0 +1,11 @@
+id,category,name,photoUrls,tags,status
+1,Animals,doggie,https://example.com/dog1.jpg,Dog,available
+2,Birds,parrot,https://example.com/parrot2.jpg,Bird,available
+3,Reptiles,python,https://example.com/python3.jpg,Reptile,pending
+4,Animals,kitty,https://example.com/cat4.jpg,Cat,sold
+5,Insects,beetle,https://example.com/beetle5.jpg,Insect,available
+6,Fish,goldfish,https://example.com/fish6.jpg,Fish,available
+7,Animals,puppy,https://example.com/dog7.jpg,Dog,pending
+8,Birds,eagle,https://example.com/bird8.jpg,Bird,sold
+9,Reptiles,iguana,https://example.com/reptile9.jpg,Reptile,available
+10,Fish,clownfish,https://example.com/fish10.jpg,Fish,sold
