@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Product.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.model</a> &gt; <span class="el_source">Product.java</span></div><h1>Product.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.model;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.Objects;
+
+@Entity
+@Cacheable
+@NamedQueries({
+         // TODO fetch doesn't work with GlassFish
+         // @NamedQuery(name = Product.FIND_BY_CATEGORY_NAME, query =
+         // &quot;SELECT p FROM Product p LEFT JOIN FETCH p.items LEFT JOIN FETCH p.category WHERE p.category.name =
+         // :pname&quot;),
+         @NamedQuery(name = Product.FIND_BY_CATEGORY_NAME, query = &quot;SELECT p FROM Product p WHERE p.category.name = :pname&quot;),
+         @NamedQuery(name = Product.FIND_ALL, query = &quot;SELECT p FROM Product p&quot;)
+})
+@XmlRootElement
+public class Product implements Serializable
+{
+
+   // ======================================
+   // = Attributes =
+   // ======================================
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.AUTO)
+   @Column(name = &quot;id&quot;, updatable = false, nullable = false)
+   private Long id;
+   @Version
+   @Column(name = &quot;version&quot;)
+   private int version;
+
+   @Column(length = 30, nullable = false)
+   @NotNull
+   @Size(min = 1, max = 30)
+   private String name;
+
+   @Column(length = 3000, nullable = false)
+   @NotNull
+   @Size(max = 3000)
+   private String description;
+
+   @ManyToOne(cascade = CascadeType.PERSIST)
+   @JoinColumn(name = &quot;category_fk&quot;, nullable = false)
+   @XmlTransient
+   private Category category;
+
+   // ======================================
+   // = Constants =
+   // ======================================
+
+   public static final String FIND_BY_CATEGORY_NAME = &quot;Product.findByCategoryName&quot;;
+   public static final String FIND_ALL = &quot;Product.findAll&quot;;
+
+   // ======================================
+   // = Constructors =
+   // ======================================
+
+   public Product()
+<span class="nc" id="L64">   {</span>
+<span class="nc" id="L65">   }</span>
+
+   public Product(String name, String description, Category category)
+<span class="nc" id="L68">   {</span>
+<span class="nc" id="L69">      this.name = name;</span>
+<span class="nc" id="L70">      this.description = description;</span>
+<span class="nc" id="L71">      this.category = category;</span>
+<span class="nc" id="L72">   }</span>
+
+   // ======================================
+   // = Getters &amp; setters =
+   // ======================================
+
+   public Long getId()
+   {
+<span class="nc" id="L80">      return this.id;</span>
+   }
+
+   public void setId(final Long id)
+   {
+<span class="nc" id="L85">      this.id = id;</span>
+<span class="nc" id="L86">   }</span>
+
+   public int getVersion()
+   {
+<span class="nc" id="L90">      return this.version;</span>
+   }
+
+   public void setVersion(final int version)
+   {
+<span class="nc" id="L95">      this.version = version;</span>
+<span class="nc" id="L96">   }</span>
+
+   public String getName()
+   {
+<span class="nc" id="L100">      return name;</span>
+   }
+
+   public void setName(String name)
+   {
+<span class="nc" id="L105">      this.name = name;</span>
+<span class="nc" id="L106">   }</span>
+
+   public String getDescription()
+   {
+<span class="nc" id="L110">      return description;</span>
+   }
+
+   public void setDescription(String description)
+   {
+<span class="nc" id="L115">      this.description = description;</span>
+<span class="nc" id="L116">   }</span>
+
+   public Category getCategory()
+   {
+<span class="nc" id="L120">      return this.category;</span>
+   }
+
+   public void setCategory(final Category category)
+   {
+<span class="nc" id="L125">      this.category = category;</span>
+<span class="nc" id="L126">   }</span>
+
+   // ======================================
+   // = Methods hash, equals, toString =
+   // ======================================
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L135" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="nc" id="L136">        Product product = (Product) o;</span>
+<span class="nc bnc" id="L137" title="All 4 branches missed.">        return name.equals(product.name) &amp;&amp; description.equals(product.description);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L142">        return Objects.hash(name, description);</span>
+    }
+
+    @Override
+   public String toString()
+   {
+<span class="nc" id="L148">      return name;</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleCallbackHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.security</a> &gt; <span class="el_source">SimpleCallbackHandler.java</span></div><h1>SimpleCallbackHandler.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.security;
+
+import org.agoncal.application.petstore.view.shopping.CredentialsBean;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import java.io.IOException;
+
+/**
+ * @author blep
+ *         Date: 12/02/12
+ *         Time: 12:29
+ */
+
+@Named
+<span class="nc" id="L22">public class SimpleCallbackHandler implements CallbackHandler</span>
+{
+
+   // ======================================
+   // =             Attributes             =
+   // ======================================
+
+   @Inject
+   //@RequestScoped
+   private CredentialsBean credentials;
+
+   // ======================================
+   // =          Business methods          =
+   // ======================================
+
+   @Override
+   public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException
+   {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">      for (Callback callback : callbacks)</span>
+      {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">         if (callback instanceof NameCallback)</span>
+         {
+<span class="nc" id="L44">            NameCallback nameCallback = (NameCallback) callback;</span>
+<span class="nc" id="L45">            nameCallback.setName(credentials.getLogin());</span>
+<span class="nc" id="L46">         }</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">         else if (callback instanceof PasswordCallback)</span>
+         {
+<span class="nc" id="L49">            PasswordCallback passwordCallback = (PasswordCallback) callback;</span>
+<span class="nc" id="L50">            passwordCallback.setPassword(credentials.getPassword().toCharArray());</span>
+<span class="nc" id="L51">         }</span>
+         else
+         {
+<span class="nc" id="L54">            throw new UnsupportedCallbackException(callback);</span>
+         }
+      }
+<span class="nc" id="L57">   }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

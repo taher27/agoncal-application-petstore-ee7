@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderLineBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.view.admin</a> &gt; <span class="el_source">OrderLineBean.java</span></div><h1>OrderLineBean.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.view.admin;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateful;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.agoncal.application.petstore.model.OrderLine;
+import org.agoncal.application.petstore.model.Item;
+import org.agoncal.application.petstore.util.Loggable;
+
+/**
+ * Backing bean for OrderLine entities.
+ * &lt;p/&gt;
+ * This class provides CRUD functionality for all OrderLine entities. It focuses
+ * purely on Java EE 6 standards (e.g. &lt;tt&gt;&amp;#64;ConversationScoped&lt;/tt&gt; for
+ * state management, &lt;tt&gt;PersistenceContext&lt;/tt&gt; for persistence,
+ * &lt;tt&gt;CriteriaBuilder&lt;/tt&gt; for searches) rather than introducing a CRUD framework or
+ * custom base class.
+ */
+
+@Named
+@Stateful
+@ConversationScoped
+@Loggable
+<span class="nc" id="L45">public class OrderLineBean implements Serializable</span>
+{
+
+   private static final long serialVersionUID = 1L;
+
+   /*
+    * Support creating and retrieving OrderLine entities
+    */
+
+   private Long id;
+
+   public Long getId()
+   {
+<span class="nc" id="L58">      return this.id;</span>
+   }
+
+   public void setId(Long id)
+   {
+<span class="nc" id="L63">      this.id = id;</span>
+<span class="nc" id="L64">   }</span>
+
+   private OrderLine orderLine;
+
+   public OrderLine getOrderLine()
+   {
+<span class="nc" id="L70">      return this.orderLine;</span>
+   }
+
+   public void setOrderLine(OrderLine orderLine)
+   {
+<span class="nc" id="L75">      this.orderLine = orderLine;</span>
+<span class="nc" id="L76">   }</span>
+
+   @Inject
+   private Conversation conversation;
+
+   @PersistenceContext(unitName = &quot;applicationPetstorePU&quot;, type = PersistenceContextType.EXTENDED)
+   private EntityManager entityManager;
+
+   public String create()
+   {
+
+<span class="nc" id="L87">      this.conversation.begin();</span>
+<span class="nc" id="L88">      this.conversation.setTimeout(1800000L);</span>
+<span class="nc" id="L89">      return &quot;create?faces-redirect=true&quot;;</span>
+   }
+
+   public void retrieve()
+   {
+
+<span class="nc bnc" id="L95" title="All 2 branches missed.">      if (FacesContext.getCurrentInstance().isPostback())</span>
+      {
+<span class="nc" id="L97">         return;</span>
+      }
+
+<span class="nc bnc" id="L100" title="All 2 branches missed.">      if (this.conversation.isTransient())</span>
+      {
+<span class="nc" id="L102">         this.conversation.begin();</span>
+<span class="nc" id="L103">         this.conversation.setTimeout(1800000L);</span>
+      }
+
+<span class="nc bnc" id="L106" title="All 2 branches missed.">      if (this.id == null)</span>
+      {
+<span class="nc" id="L108">         this.orderLine = this.example;</span>
+      }
+      else
+      {
+<span class="nc" id="L112">         this.orderLine = findById(getId());</span>
+      }
+<span class="nc" id="L114">   }</span>
+
+   public OrderLine findById(Long id)
+   {
+
+<span class="nc" id="L119">      return this.entityManager.find(OrderLine.class, id);</span>
+   }
+
+   /*
+    * Support updating and deleting OrderLine entities
+    */
+
+   public String update()
+   {
+<span class="nc" id="L128">      this.conversation.end();</span>
+
+      try
+      {
+<span class="nc bnc" id="L132" title="All 2 branches missed.">         if (this.id == null)</span>
+         {
+<span class="nc" id="L134">            this.entityManager.persist(this.orderLine);</span>
+<span class="nc" id="L135">            return &quot;search?faces-redirect=true&quot;;</span>
+         }
+         else
+         {
+<span class="nc" id="L139">            this.entityManager.merge(this.orderLine);</span>
+<span class="nc" id="L140">            return &quot;view?faces-redirect=true&amp;id=&quot; + this.orderLine.getId();</span>
+         }
+      }
+<span class="nc" id="L143">      catch (Exception e)</span>
+      {
+<span class="nc" id="L145">         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));</span>
+<span class="nc" id="L146">         return null;</span>
+      }
+   }
+
+   public String delete()
+   {
+<span class="nc" id="L152">      this.conversation.end();</span>
+
+      try
+      {
+<span class="nc" id="L156">         OrderLine deletableEntity = findById(getId());</span>
+
+<span class="nc" id="L158">         this.entityManager.remove(deletableEntity);</span>
+<span class="nc" id="L159">         this.entityManager.flush();</span>
+<span class="nc" id="L160">         return &quot;search?faces-redirect=true&quot;;</span>
+      }
+<span class="nc" id="L162">      catch (Exception e)</span>
+      {
+<span class="nc" id="L164">         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));</span>
+<span class="nc" id="L165">         return null;</span>
+      }
+   }
+
+   /*
+    * Support searching OrderLine entities with pagination
+    */
+
+   private int page;
+   private long count;
+   private List&lt;OrderLine&gt; pageItems;
+
+<span class="nc" id="L177">   private OrderLine example = new OrderLine();</span>
+
+   public int getPage()
+   {
+<span class="nc" id="L181">      return this.page;</span>
+   }
+
+   public void setPage(int page)
+   {
+<span class="nc" id="L186">      this.page = page;</span>
+<span class="nc" id="L187">   }</span>
+
+   public int getPageSize()
+   {
+<span class="nc" id="L191">      return 10;</span>
+   }
+
+   public OrderLine getExample()
+   {
+<span class="nc" id="L196">      return this.example;</span>
+   }
+
+   public void setExample(OrderLine example)
+   {
+<span class="nc" id="L201">      this.example = example;</span>
+<span class="nc" id="L202">   }</span>
+
+   public String search()
+   {
+<span class="nc" id="L206">      this.page = 0;</span>
+<span class="nc" id="L207">      return null;</span>
+   }
+
+   public void paginate()
+   {
+
+<span class="nc" id="L213">      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+
+      // Populate this.count
+
+<span class="nc" id="L217">      CriteriaQuery&lt;Long&gt; countCriteria = builder.createQuery(Long.class);</span>
+<span class="nc" id="L218">      Root&lt;OrderLine&gt; root = countCriteria.from(OrderLine.class);</span>
+<span class="nc" id="L219">      countCriteria = countCriteria.select(builder.count(root)).where(</span>
+<span class="nc" id="L220">            getSearchPredicates(root));</span>
+<span class="nc" id="L221">      this.count = this.entityManager.createQuery(countCriteria)</span>
+<span class="nc" id="L222">            .getSingleResult();</span>
+
+      // Populate this.pageItems
+
+<span class="nc" id="L226">      CriteriaQuery&lt;OrderLine&gt; criteria = builder.createQuery(OrderLine.class);</span>
+<span class="nc" id="L227">      root = criteria.from(OrderLine.class);</span>
+<span class="nc" id="L228">      TypedQuery&lt;OrderLine&gt; query = this.entityManager.createQuery(criteria</span>
+<span class="nc" id="L229">            .select(root).where(getSearchPredicates(root)));</span>
+<span class="nc" id="L230">      query.setFirstResult(this.page * getPageSize()).setMaxResults(</span>
+<span class="nc" id="L231">            getPageSize());</span>
+<span class="nc" id="L232">      this.pageItems = query.getResultList();</span>
+<span class="nc" id="L233">   }</span>
+
+   private Predicate[] getSearchPredicates(Root&lt;OrderLine&gt; root)
+   {
+
+<span class="nc" id="L238">      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L239">      List&lt;Predicate&gt; predicatesList = new ArrayList&lt;Predicate&gt;();</span>
+
+<span class="nc" id="L241">      Integer quantity = this.example.getQuantity();</span>
+<span class="nc bnc" id="L242" title="All 4 branches missed.">      if (quantity != null &amp;&amp; quantity.intValue() != 0)</span>
+      {
+<span class="nc" id="L244">         predicatesList.add(builder.equal(root.get(&quot;quantity&quot;), quantity));</span>
+      }
+<span class="nc" id="L246">      Item item = this.example.getItem();</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">      if (item != null)</span>
+      {
+<span class="nc" id="L249">         predicatesList.add(builder.equal(root.get(&quot;item&quot;), item));</span>
+      }
+
+<span class="nc" id="L252">      return predicatesList.toArray(new Predicate[predicatesList.size()]);</span>
+   }
+
+   public List&lt;OrderLine&gt; getPageItems()
+   {
+<span class="nc" id="L257">      return this.pageItems;</span>
+   }
+
+   public long getCount()
+   {
+<span class="nc" id="L262">      return this.count;</span>
+   }
+
+   /*
+    * Support listing and POSTing back OrderLine entities (e.g. from inside an
+    * HtmlSelectOneMenu)
+    */
+
+   public List&lt;OrderLine&gt; getAll()
+   {
+
+<span class="nc" id="L273">      CriteriaQuery&lt;OrderLine&gt; criteria = this.entityManager</span>
+<span class="nc" id="L274">            .getCriteriaBuilder().createQuery(OrderLine.class);</span>
+<span class="nc" id="L275">      return this.entityManager.createQuery(</span>
+<span class="nc" id="L276">            criteria.select(criteria.from(OrderLine.class))).getResultList();</span>
+   }
+
+   @Resource
+   private SessionContext sessionContext;
+
+   public Converter getConverter()
+   {
+
+<span class="nc" id="L285">      final OrderLineBean ejbProxy = this.sessionContext.getBusinessObject(OrderLineBean.class);</span>
+
+<span class="nc" id="L287">      return new Converter()</span>
+<span class="nc" id="L288">      {</span>
+
+         @Override
+         public Object getAsObject(FacesContext context,
+               UIComponent component, String value)
+         {
+
+<span class="nc" id="L295">            return ejbProxy.findById(Long.valueOf(value));</span>
+         }
+
+         @Override
+         public String getAsString(FacesContext context,
+               UIComponent component, Object value)
+         {
+
+<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (value == null)</span>
+            {
+<span class="nc" id="L305">               return &quot;&quot;;</span>
+            }
+
+<span class="nc" id="L308">            return String.valueOf(((OrderLine) value).getId());</span>
+         }
+      };
+   }
+
+   /*
+    * Support adding children to bidirectional, one-to-many tables
+    */
+
+<span class="nc" id="L317">   private OrderLine add = new OrderLine();</span>
+
+   public OrderLine getAdd()
+   {
+<span class="nc" id="L321">      return this.add;</span>
+   }
+
+   public OrderLine getAdded()
+   {
+<span class="nc" id="L326">      OrderLine added = this.add;</span>
+<span class="nc" id="L327">      this.add = new OrderLine();</span>
+<span class="nc" id="L328">      return added;</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

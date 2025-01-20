@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ViewUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.view</a> &gt; <span class="el_source">ViewUtils.java</span></div><h1>ViewUtils.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.view;
+
+import javax.persistence.Id;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Utilities for working with Java Server Faces views.
+ */
+
+public final class ViewUtils
+{
+
+   public static &lt;T&gt; List&lt;T&gt; asList(Collection&lt;T&gt; collection)
+   {
+
+<span class="nc bnc" id="L21" title="All 2 branches missed.">      if (collection == null)</span>
+      {
+<span class="nc" id="L23">         return null;</span>
+      }
+
+<span class="nc" id="L26">      return new ArrayList&lt;T&gt;(collection);</span>
+   }
+
+   public static String display(Object object)
+   {
+
+<span class="nc bnc" id="L32" title="All 2 branches missed.">      if (object == null)</span>
+      {
+<span class="nc" id="L34">         return null;</span>
+      }
+
+      try
+      {
+         // Invoke toString if declared in the class. If not found, the NoSuchMethodException is caught and handled
+<span class="nc" id="L40">         object.getClass().getDeclaredMethod(&quot;toString&quot;);</span>
+<span class="nc" id="L41">         return object.toString();</span>
+      }
+<span class="nc" id="L43">      catch (NoSuchMethodException noMethodEx)</span>
+      {
+         try
+         {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            for (Field field : object.getClass().getDeclaredFields())</span>
+            {
+               // Find the primary key field and display it
+<span class="nc bnc" id="L50" title="All 2 branches missed.">               if (field.getAnnotation(Id.class) != null)</span>
+               {
+                  // Find a matching getter and invoke it to display the key
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                  for (Method method : object.getClass().getDeclaredMethods())</span>
+                  {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                     if (method.equals(new PropertyDescriptor((String)field.getName(), object.getClass()).getReadMethod()))</span>
+                     {
+<span class="nc" id="L57">                        return method.invoke(object).toString();</span>
+                     }
+                  }
+               }
+            }
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            for (Method method : object.getClass().getDeclaredMethods())</span>
+            {
+               // Find the primary key as a property instead of a field, and display it
+<span class="nc bnc" id="L65" title="All 2 branches missed.">               if (method.getAnnotation(Id.class) != null)</span>
+               {
+<span class="nc" id="L67">                  return method.invoke(object).toString();</span>
+               }
+            }
+         }
+<span class="nc" id="L71">         catch (Exception ex)</span>
+         {
+            // Unlikely, but abort and stop view generation if any exception is thrown
+<span class="nc" id="L74">            throw new RuntimeException(ex);</span>
+<span class="nc" id="L75">         }</span>
+      }
+
+<span class="nc" id="L78">      return null;</span>
+   }
+
+   private ViewUtils()
+   {
+
+      // Can never be called
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

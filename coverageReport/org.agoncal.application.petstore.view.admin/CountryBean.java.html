@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CountryBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.view.admin</a> &gt; <span class="el_source">CountryBean.java</span></div><h1>CountryBean.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.view.admin;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateful;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.agoncal.application.petstore.model.Country;
+import org.agoncal.application.petstore.util.Loggable;
+
+/**
+ * Backing bean for Country entities.
+ * &lt;p/&gt;
+ * This class provides CRUD functionality for all Country entities. It focuses
+ * purely on Java EE 6 standards (e.g. &lt;tt&gt;&amp;#64;ConversationScoped&lt;/tt&gt; for
+ * state management, &lt;tt&gt;PersistenceContext&lt;/tt&gt; for persistence,
+ * &lt;tt&gt;CriteriaBuilder&lt;/tt&gt; for searches) rather than introducing a CRUD framework or
+ * custom base class.
+ */
+
+@Named
+@Stateful
+@ConversationScoped
+@Loggable
+<span class="nc" id="L44">public class CountryBean implements Serializable</span>
+{
+
+   private static final long serialVersionUID = 1L;
+
+   /*
+    * Support creating and retrieving Country entities
+    */
+
+   private Long id;
+
+   public Long getId()
+   {
+<span class="nc" id="L57">      return this.id;</span>
+   }
+
+   public void setId(Long id)
+   {
+<span class="nc" id="L62">      this.id = id;</span>
+<span class="nc" id="L63">   }</span>
+
+   private Country country;
+
+   public Country getCountry()
+   {
+<span class="nc" id="L69">      return this.country;</span>
+   }
+
+   public void setCountry(Country country)
+   {
+<span class="nc" id="L74">      this.country = country;</span>
+<span class="nc" id="L75">   }</span>
+
+   @Inject
+   private Conversation conversation;
+
+   @PersistenceContext(unitName = &quot;applicationPetstorePU&quot;, type = PersistenceContextType.EXTENDED)
+   private EntityManager entityManager;
+
+   public String create()
+   {
+
+<span class="nc" id="L86">      this.conversation.begin();</span>
+<span class="nc" id="L87">      this.conversation.setTimeout(1800000L);</span>
+<span class="nc" id="L88">      return &quot;create?faces-redirect=true&quot;;</span>
+   }
+
+   public void retrieve()
+   {
+
+<span class="nc bnc" id="L94" title="All 2 branches missed.">      if (FacesContext.getCurrentInstance().isPostback())</span>
+      {
+<span class="nc" id="L96">         return;</span>
+      }
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">      if (this.conversation.isTransient())</span>
+      {
+<span class="nc" id="L101">         this.conversation.begin();</span>
+<span class="nc" id="L102">         this.conversation.setTimeout(1800000L);</span>
+      }
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">      if (this.id == null)</span>
+      {
+<span class="nc" id="L107">         this.country = this.example;</span>
+      }
+      else
+      {
+<span class="nc" id="L111">         this.country = findById(getId());</span>
+      }
+<span class="nc" id="L113">   }</span>
+
+   public Country findById(Long id)
+   {
+
+<span class="nc" id="L118">      return this.entityManager.find(Country.class, id);</span>
+   }
+
+   /*
+    * Support updating and deleting Country entities
+    */
+
+   public String update()
+   {
+<span class="nc" id="L127">      this.conversation.end();</span>
+
+      try
+      {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">         if (this.id == null)</span>
+         {
+<span class="nc" id="L133">            this.entityManager.persist(this.country);</span>
+<span class="nc" id="L134">            return &quot;search?faces-redirect=true&quot;;</span>
+         }
+         else
+         {
+<span class="nc" id="L138">            this.entityManager.merge(this.country);</span>
+<span class="nc" id="L139">            return &quot;view?faces-redirect=true&amp;id=&quot; + this.country.getId();</span>
+         }
+      }
+<span class="nc" id="L142">      catch (Exception e)</span>
+      {
+<span class="nc" id="L144">         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));</span>
+<span class="nc" id="L145">         return null;</span>
+      }
+   }
+
+   public String delete()
+   {
+<span class="nc" id="L151">      this.conversation.end();</span>
+
+      try
+      {
+<span class="nc" id="L155">         Country deletableEntity = findById(getId());</span>
+
+<span class="nc" id="L157">         this.entityManager.remove(deletableEntity);</span>
+<span class="nc" id="L158">         this.entityManager.flush();</span>
+<span class="nc" id="L159">         return &quot;search?faces-redirect=true&quot;;</span>
+      }
+<span class="nc" id="L161">      catch (Exception e)</span>
+      {
+<span class="nc" id="L163">         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));</span>
+<span class="nc" id="L164">         return null;</span>
+      }
+   }
+
+   /*
+    * Support searching Country entities with pagination
+    */
+
+   private int page;
+   private long count;
+   private List&lt;Country&gt; pageItems;
+
+<span class="nc" id="L176">   private Country example = new Country();</span>
+
+   public int getPage()
+   {
+<span class="nc" id="L180">      return this.page;</span>
+   }
+
+   public void setPage(int page)
+   {
+<span class="nc" id="L185">      this.page = page;</span>
+<span class="nc" id="L186">   }</span>
+
+   public int getPageSize()
+   {
+<span class="nc" id="L190">      return 10;</span>
+   }
+
+   public Country getExample()
+   {
+<span class="nc" id="L195">      return this.example;</span>
+   }
+
+   public void setExample(Country example)
+   {
+<span class="nc" id="L200">      this.example = example;</span>
+<span class="nc" id="L201">   }</span>
+
+   public String search()
+   {
+<span class="nc" id="L205">      this.page = 0;</span>
+<span class="nc" id="L206">      return null;</span>
+   }
+
+   public void paginate()
+   {
+
+<span class="nc" id="L212">      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+
+      // Populate this.count
+
+<span class="nc" id="L216">      CriteriaQuery&lt;Long&gt; countCriteria = builder.createQuery(Long.class);</span>
+<span class="nc" id="L217">      Root&lt;Country&gt; root = countCriteria.from(Country.class);</span>
+<span class="nc" id="L218">      countCriteria = countCriteria.select(builder.count(root)).where(</span>
+<span class="nc" id="L219">            getSearchPredicates(root));</span>
+<span class="nc" id="L220">      this.count = this.entityManager.createQuery(countCriteria)</span>
+<span class="nc" id="L221">            .getSingleResult();</span>
+
+      // Populate this.pageItems
+
+<span class="nc" id="L225">      CriteriaQuery&lt;Country&gt; criteria = builder.createQuery(Country.class);</span>
+<span class="nc" id="L226">      root = criteria.from(Country.class);</span>
+<span class="nc" id="L227">      TypedQuery&lt;Country&gt; query = this.entityManager.createQuery(criteria</span>
+<span class="nc" id="L228">            .select(root).where(getSearchPredicates(root)));</span>
+<span class="nc" id="L229">      query.setFirstResult(this.page * getPageSize()).setMaxResults(</span>
+<span class="nc" id="L230">            getPageSize());</span>
+<span class="nc" id="L231">      this.pageItems = query.getResultList();</span>
+<span class="nc" id="L232">   }</span>
+
+   private Predicate[] getSearchPredicates(Root&lt;Country&gt; root)
+   {
+
+<span class="nc" id="L237">      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L238">      List&lt;Predicate&gt; predicatesList = new ArrayList&lt;Predicate&gt;();</span>
+
+<span class="nc" id="L240">      String isoCode = this.example.getIsoCode();</span>
+<span class="nc bnc" id="L241" title="All 4 branches missed.">      if (isoCode != null &amp;&amp; !&quot;&quot;.equals(isoCode))</span>
+      {
+<span class="nc" id="L243">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;isoCode&quot;)), '%' + isoCode.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L245">      String name = this.example.getName();</span>
+<span class="nc bnc" id="L246" title="All 4 branches missed.">      if (name != null &amp;&amp; !&quot;&quot;.equals(name))</span>
+      {
+<span class="nc" id="L248">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;name&quot;)), '%' + name.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L250">      String printableName = this.example.getPrintableName();</span>
+<span class="nc bnc" id="L251" title="All 4 branches missed.">      if (printableName != null &amp;&amp; !&quot;&quot;.equals(printableName))</span>
+      {
+<span class="nc" id="L253">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;printableName&quot;)), '%' + printableName.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L255">      String iso3 = this.example.getIso3();</span>
+<span class="nc bnc" id="L256" title="All 4 branches missed.">      if (iso3 != null &amp;&amp; !&quot;&quot;.equals(iso3))</span>
+      {
+<span class="nc" id="L258">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;iso3&quot;)), '%' + iso3.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L260">      String numcode = this.example.getNumcode();</span>
+<span class="nc bnc" id="L261" title="All 4 branches missed.">      if (numcode != null &amp;&amp; !&quot;&quot;.equals(numcode))</span>
+      {
+<span class="nc" id="L263">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;numcode&quot;)), '%' + numcode.toLowerCase() + '%'));</span>
+      }
+
+<span class="nc" id="L266">      return predicatesList.toArray(new Predicate[predicatesList.size()]);</span>
+   }
+
+   public List&lt;Country&gt; getPageItems()
+   {
+<span class="nc" id="L271">      return this.pageItems;</span>
+   }
+
+   public long getCount()
+   {
+<span class="nc" id="L276">      return this.count;</span>
+   }
+
+   /*
+    * Support listing and POSTing back Country entities (e.g. from inside an
+    * HtmlSelectOneMenu)
+    */
+
+   public List&lt;Country&gt; getAll()
+   {
+
+<span class="nc" id="L287">      CriteriaQuery&lt;Country&gt; criteria = this.entityManager</span>
+<span class="nc" id="L288">            .getCriteriaBuilder().createQuery(Country.class);</span>
+<span class="nc" id="L289">      return this.entityManager.createQuery(</span>
+<span class="nc" id="L290">            criteria.select(criteria.from(Country.class))).getResultList();</span>
+   }
+
+   @Resource
+   private SessionContext sessionContext;
+
+   public Converter getConverter()
+   {
+
+<span class="nc" id="L299">      final CountryBean ejbProxy = this.sessionContext.getBusinessObject(CountryBean.class);</span>
+
+<span class="nc" id="L301">      return new Converter()</span>
+<span class="nc" id="L302">      {</span>
+
+         @Override
+         public Object getAsObject(FacesContext context,
+               UIComponent component, String value)
+         {
+
+<span class="nc" id="L309">            return ejbProxy.findById(Long.valueOf(value));</span>
+         }
+
+         @Override
+         public String getAsString(FacesContext context,
+               UIComponent component, Object value)
+         {
+
+<span class="nc bnc" id="L317" title="All 2 branches missed.">            if (value == null)</span>
+            {
+<span class="nc" id="L319">               return &quot;&quot;;</span>
+            }
+
+<span class="nc" id="L322">            return String.valueOf(((Country) value).getId());</span>
+         }
+      };
+   }
+
+   /*
+    * Support adding children to bidirectional, one-to-many tables
+    */
+
+<span class="nc" id="L331">   private Country add = new Country();</span>
+
+   public Country getAdd()
+   {
+<span class="nc" id="L335">      return this.add;</span>
+   }
+
+   public Country getAdded()
+   {
+<span class="nc" id="L340">      Country added = this.add;</span>
+<span class="nc" id="L341">      this.add = new Country();</span>
+<span class="nc" id="L342">      return added;</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

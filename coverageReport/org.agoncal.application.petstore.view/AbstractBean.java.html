@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.view</a> &gt; <span class="el_source">AbstractBean.java</span></div><h1>AbstractBean.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.view;
+
+import org.agoncal.application.petstore.util.Loggable;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
+
+/**
+ * @author Antonio Goncalves
+ *         http://www.antoniogoncalves.org
+ *         --
+ */
+
+@Loggable
+<span class="nc" id="L21">public abstract class AbstractBean {</span>
+
+    // ======================================
+    // =             Attributes             =
+    // ======================================
+
+    @Inject
+    private transient Logger logger;
+
+    // ======================================
+    // =          Protected Methods         =
+    // ======================================
+
+    private String getMessage(FacesContext facesContext, String msgKey, Object... args) {
+<span class="nc" id="L35">        Locale locale = facesContext.getViewRoot().getLocale();</span>
+<span class="nc" id="L36">        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="nc" id="L37">        ResourceBundle bundle = ResourceBundle.getBundle(&quot;Messages&quot;, locale, classLoader);</span>
+<span class="nc" id="L38">        String msgValue = bundle.getString(msgKey);</span>
+<span class="nc" id="L39">        return MessageFormat.format(msgValue, args);</span>
+    }
+
+    protected void addInformationMessage(String message, Object... args) {
+<span class="nc" id="L43">        FacesContext context = FacesContext.getCurrentInstance();</span>
+<span class="nc" id="L44">        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getMessage(context, message, args), null));</span>
+<span class="nc" id="L45">    }</span>
+
+    protected void addWarningMessage(String message, Object... args) {
+<span class="nc" id="L48">        FacesContext context = FacesContext.getCurrentInstance();</span>
+<span class="nc" id="L49">        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, getMessage(context, message, args), null));</span>
+<span class="nc" id="L50">    }</span>
+
+    protected void addErrorMessage(String message, Object... args) {
+<span class="nc" id="L53">        FacesContext context = FacesContext.getCurrentInstance();</span>
+<span class="nc" id="L54">        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessage(context, message, args), null));</span>
+<span class="nc" id="L55">    }</span>
+
+    protected String getParam(String param) {
+<span class="nc" id="L58">        FacesContext context = FacesContext.getCurrentInstance();</span>
+<span class="nc" id="L59">        Map&lt;String, String&gt; map = context.getExternalContext().getRequestParameterMap();</span>
+<span class="nc" id="L60">        return map.get(param);</span>
+    }
+
+    protected Long getParamId(String param) {
+<span class="nc" id="L64">        return Long.valueOf(getParam(param));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

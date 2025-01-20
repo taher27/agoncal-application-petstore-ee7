@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Country.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.model</a> &gt; <span class="el_source">Country.java</span></div><h1>Country.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.model;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.Objects;
+
+@Entity
+@Cacheable
+@XmlRootElement
+public class Country implements Serializable
+{
+
+   // ======================================
+   // = Attributes =
+   // ======================================
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.AUTO)
+   @Column(name = &quot;id&quot;, updatable = false, nullable = false)
+   private Long id;
+   @Version
+   @Column(name = &quot;version&quot;)
+   private int version;
+
+   @Column(length = 2, name = &quot;iso_code&quot;, nullable = false)
+   @NotNull
+   @Size(min = 2, max = 2)
+   private String isoCode;
+
+   @Column(length = 80, nullable = false)
+   @NotNull
+   @Size(min = 2, max = 80)
+   private String name;
+
+   @Column(length = 80, name = &quot;printable_name&quot;, nullable = false)
+   @NotNull
+   @Size(min = 2, max = 80)
+   private String printableName;
+
+   @Column(length = 3)
+   @NotNull
+   @Size(min = 3, max = 3)
+   private String iso3;
+
+   @Column(length = 3)
+   @NotNull
+   @Size(min = 3, max = 3)
+   private String numcode;
+
+   // ======================================
+   // = Constructors =
+   // ======================================
+
+   public Country()
+<span class="nc" id="L58">   {</span>
+<span class="nc" id="L59">   }</span>
+
+   public Country(String isoCode, String name, String printableName, String iso3, String numcode)
+<span class="nc" id="L62">   {</span>
+<span class="nc" id="L63">      this.isoCode = isoCode;</span>
+<span class="nc" id="L64">      this.name = name;</span>
+<span class="nc" id="L65">      this.printableName = printableName;</span>
+<span class="nc" id="L66">      this.iso3 = iso3;</span>
+<span class="nc" id="L67">      this.numcode = numcode;</span>
+<span class="nc" id="L68">   }</span>
+
+   // ======================================
+   // = Getters &amp; setters =
+   // ======================================
+
+   public Long getId()
+   {
+<span class="nc" id="L76">      return this.id;</span>
+   }
+
+   public void setId(final Long id)
+   {
+<span class="nc" id="L81">      this.id = id;</span>
+<span class="nc" id="L82">   }</span>
+
+   public int getVersion()
+   {
+<span class="nc" id="L86">      return this.version;</span>
+   }
+
+   public void setVersion(final int version)
+   {
+<span class="nc" id="L91">      this.version = version;</span>
+<span class="nc" id="L92">   }</span>
+
+   public String getIsoCode()
+   {
+<span class="nc" id="L96">      return isoCode;</span>
+   }
+
+   public void setIsoCode(String isoCode)
+   {
+<span class="nc" id="L101">      this.isoCode = isoCode;</span>
+<span class="nc" id="L102">   }</span>
+
+   public String getName()
+   {
+<span class="nc" id="L106">      return name;</span>
+   }
+
+   public void setName(String name)
+   {
+<span class="nc" id="L111">      this.name = name;</span>
+<span class="nc" id="L112">   }</span>
+
+   public String getPrintableName()
+   {
+<span class="nc" id="L116">      return printableName;</span>
+   }
+
+   public void setPrintableName(String printableName)
+   {
+<span class="nc" id="L121">      this.printableName = printableName;</span>
+<span class="nc" id="L122">   }</span>
+
+   public String getIso3()
+   {
+<span class="nc" id="L126">      return iso3;</span>
+   }
+
+   public void setIso3(String iso3)
+   {
+<span class="nc" id="L131">      this.iso3 = iso3;</span>
+<span class="nc" id="L132">   }</span>
+
+   public String getNumcode()
+   {
+<span class="nc" id="L136">      return numcode;</span>
+   }
+
+   public void setNumcode(String numcode)
+   {
+<span class="nc" id="L141">      this.numcode = numcode;</span>
+<span class="nc" id="L142">   }</span>
+
+   // ======================================
+   // = Methods hash, equals, toString =
+   // ======================================
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L151" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="nc" id="L152">        Country country = (Country) o;</span>
+<span class="nc" id="L153">        return isoCode.equals(country.isoCode);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L158">        return Objects.hash(isoCode);</span>
+    }
+
+    @Override
+   public String toString()
+   {
+<span class="nc" id="L164">      return name;</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

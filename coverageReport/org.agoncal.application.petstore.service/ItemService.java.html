@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.service</a> &gt; <span class="el_source">ItemService.java</span></div><h1>ItemService.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.service;
+
+import org.agoncal.application.petstore.model.Item;
+import org.agoncal.application.petstore.model.Product;
+
+import javax.ejb.Stateless;
+import javax.ejb.LocalBean;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import org.agoncal.application.petstore.util.Loggable;
+
+@Stateless
+@LocalBean
+@Loggable
+public class ItemService extends AbstractService&lt;Item&gt; implements Serializable
+{
+
+
+   // ======================================
+   // =            Constructors            =
+   // ======================================
+
+   public ItemService()
+   {
+<span class="nc" id="L29">      super(Item.class);</span>
+<span class="nc" id="L30">   }</span>
+
+   // ======================================
+   // =         Protected methods          =
+   // ======================================
+
+   @Override
+   protected Predicate[] getSearchPredicates(Root&lt;Item&gt; root, Item example)
+   {
+<span class="nc" id="L39">      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L40">      List&lt;Predicate&gt; predicatesList = new ArrayList&lt;Predicate&gt;();</span>
+
+<span class="nc" id="L42">      String name = example.getName();</span>
+<span class="nc bnc" id="L43" title="All 4 branches missed.">      if (name != null &amp;&amp; !&quot;&quot;.equals(name))</span>
+      {
+<span class="nc" id="L45">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;name&quot;)), '%' + name.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L47">      String description = example.getDescription();</span>
+<span class="nc bnc" id="L48" title="All 4 branches missed.">      if (description != null &amp;&amp; !&quot;&quot;.equals(description))</span>
+      {
+<span class="nc" id="L50">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;description&quot;)), '%' + description.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L52">      String imagePath = example.getImagePath();</span>
+<span class="nc bnc" id="L53" title="All 4 branches missed.">      if (imagePath != null &amp;&amp; !&quot;&quot;.equals(imagePath))</span>
+      {
+<span class="nc" id="L55">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt; get(&quot;imagePath&quot;)), '%' + imagePath.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L57">      Product product = example.getProduct();</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">      if (product != null)</span>
+      {
+<span class="nc" id="L60">         predicatesList.add(builder.equal(root.get(&quot;product&quot;), product));</span>
+      }
+
+<span class="nc" id="L63">      return predicatesList.toArray(new Predicate[predicatesList.size()]);</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

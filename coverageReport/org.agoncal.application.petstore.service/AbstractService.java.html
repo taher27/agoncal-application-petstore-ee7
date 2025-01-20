@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.service</a> &gt; <span class="el_source">AbstractService.java</span></div><h1>AbstractService.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.service;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
+import org.agoncal.application.petstore.util.Loggable;
+
+@Loggable
+public abstract class AbstractService&lt;T&gt;
+{
+
+   // ======================================
+   // =             Attributes             =
+   // ======================================
+
+   @PersistenceContext(unitName = &quot;applicationPetstorePU&quot;)
+   protected EntityManager entityManager;
+
+   private Class&lt;T&gt; entityClass;
+
+   // ======================================
+   // =            Constructors            =
+   // ======================================
+
+   public AbstractService()
+<span class="nc" id="L31">   {</span>
+<span class="nc" id="L32">   }</span>
+
+   public AbstractService(Class&lt;T&gt; entityClass)
+<span class="nc" id="L35">   {</span>
+<span class="nc" id="L36">      this.entityClass = entityClass;</span>
+<span class="nc" id="L37">   }</span>
+
+   // ======================================
+   // =          Business methods          =
+   // ======================================
+
+   public T persist(T entity)
+   {
+<span class="nc" id="L45">      entityManager.persist(entity);</span>
+<span class="nc" id="L46">      return entity;</span>
+   }
+
+   public T findById(Long id)
+   {
+<span class="nc" id="L51">      return entityManager.find(entityClass, id);</span>
+   }
+
+   public void remove(T entity)
+   {
+<span class="nc" id="L56">      entityManager.remove(entityManager.merge(entity));</span>
+<span class="nc" id="L57">   }</span>
+
+   public T merge(T entity)
+   {
+<span class="nc" id="L61">      return entityManager.merge(entity);</span>
+   }
+
+   public List&lt;T&gt; listAll(Integer startPosition, Integer maxResult)
+   {
+<span class="nc" id="L66">      TypedQuery&lt;T&gt; findAllQuery = getListAllQuery();</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">      if (startPosition != null)</span>
+{
+<span class="nc" id="L69">         findAllQuery.setFirstResult(startPosition);</span>
+      }
+<span class="nc bnc" id="L71" title="All 2 branches missed.">      if (maxResult != null)</span>
+      {
+<span class="nc" id="L73">         findAllQuery.setMaxResults(maxResult);</span>
+      }
+<span class="nc" id="L75">      final List&lt;T&gt; results = findAllQuery.getResultList();</span>
+<span class="nc" id="L76">      return results;</span>
+   }
+
+   public List&lt;T&gt; listAll()
+   {
+<span class="nc" id="L81">      return getListAllQuery().getResultList();</span>
+   }
+
+   public TypedQuery&lt;T&gt; getListAllQuery()
+   {
+<span class="nc" id="L86">      CriteriaQuery&lt;T&gt; criteria = entityManager.getCriteriaBuilder().createQuery(entityClass);</span>
+<span class="nc" id="L87">      return entityManager.createQuery(criteria.select(criteria.from(entityClass)));</span>
+   }
+
+   public long count(T example)
+   {
+
+<span class="nc" id="L93">      CriteriaBuilder builder = entityManager.getCriteriaBuilder();</span>
+
+      // Populate count
+
+<span class="nc" id="L97">      CriteriaQuery&lt;Long&gt; countCriteria = builder.createQuery(Long.class);</span>
+<span class="nc" id="L98">      Root&lt;T&gt; root = countCriteria.from(entityClass);</span>
+<span class="nc" id="L99">      countCriteria = countCriteria.select(builder.count(root)).where(getSearchPredicates(root, example));</span>
+<span class="nc" id="L100">      long count = entityManager.createQuery(countCriteria).getSingleResult();</span>
+<span class="nc" id="L101">      return count;</span>
+   }
+
+   public List&lt;T&gt; page(T example, int page, int pageSize)
+   {
+
+<span class="nc" id="L107">      CriteriaBuilder builder = entityManager.getCriteriaBuilder();</span>
+
+      // Populate pageItems
+
+<span class="nc" id="L111">      CriteriaQuery&lt;T&gt; criteria = builder.createQuery(entityClass);</span>
+<span class="nc" id="L112">      Root&lt;T&gt; root = criteria.from(entityClass);</span>
+<span class="nc" id="L113">      TypedQuery&lt;T&gt; query = entityManager.createQuery(criteria.select(root).where(getSearchPredicates(root, example)));</span>
+<span class="nc" id="L114">      query.setFirstResult(page * pageSize).setMaxResults(pageSize);</span>
+<span class="nc" id="L115">      List&lt;T&gt; pageItems = query.getResultList();</span>
+<span class="nc" id="L116">      return pageItems;</span>
+
+   }
+
+   // ======================================
+   // =         Protected methods          =
+   // ======================================
+
+   protected abstract Predicate[] getSearchPredicates(Root&lt;T&gt; root, T example);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

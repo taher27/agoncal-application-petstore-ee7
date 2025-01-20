@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CountryEndpoint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.rest</a> &gt; <span class="el_source">CountryEndpoint.java</span></div><h1>CountryEndpoint.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.rest;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.agoncal.application.petstore.model.Country;
+import org.agoncal.application.petstore.util.Loggable;
+
+import javax.ejb.Stateless;
+import javax.persistence.*;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
+import java.util.List;
+
+/**
+ * @author Antonio Goncalves
+ *         http://www.antoniogoncalves.org
+ *         --
+ */
+
+@Stateless
+@Path(&quot;/countries&quot;)
+@Loggable
+@Api(&quot;Country&quot;)
+<span class="nc" id="L26">public class CountryEndpoint</span>
+{
+
+   // ======================================
+   // =             Attributes             =
+   // ======================================
+
+   @PersistenceContext(unitName = &quot;applicationPetstorePU&quot;)
+   private EntityManager em;
+
+   // ======================================
+   // =          Business methods          =
+   // ======================================
+
+   @POST
+   @Consumes( {&quot;application/xml&quot;, &quot;application/json&quot;})
+   @ApiOperation(&quot;Creates a country&quot;)
+   public Response create(Country entity)
+   {
+<span class="nc" id="L45">      em.persist(entity);</span>
+<span class="nc" id="L46">      return Response.created(UriBuilder.fromResource(CountryEndpoint.class).path(String.valueOf(entity.getId())).build()).build();</span>
+   }
+
+   @DELETE
+   @Path(&quot;/{id:[0-9][0-9]*}&quot;)
+   @ApiOperation(&quot;Deletes a country given an id&quot;)
+   public Response deleteById(@PathParam(&quot;id&quot;) Long id)
+   {
+<span class="nc" id="L54">      Country entity = em.find(Country.class, id);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">      if (entity == null)</span>
+      {
+<span class="nc" id="L57">         return Response.status(Status.NOT_FOUND).build();</span>
+      }
+<span class="nc" id="L59">      em.remove(entity);</span>
+<span class="nc" id="L60">      return Response.noContent().build();</span>
+   }
+
+   @GET
+   @Path(&quot;/{id:[0-9][0-9]*}&quot;)
+   @Produces( {&quot;application/xml&quot;, &quot;application/json&quot;})
+   @ApiOperation(&quot;Retrieves a country by its id&quot;)
+   public Response findById(@PathParam(&quot;id&quot;) Long id)
+   {
+<span class="nc" id="L69">      TypedQuery&lt;Country&gt; findByIdQuery = em.createQuery(&quot;SELECT DISTINCT c FROM Country c WHERE c.id = :entityId ORDER BY c.id&quot;, Country.class);</span>
+<span class="nc" id="L70">      findByIdQuery.setParameter(&quot;entityId&quot;, id);</span>
+      Country entity;
+      try
+      {
+<span class="nc" id="L74">         entity = findByIdQuery.getSingleResult();</span>
+      }
+<span class="nc" id="L76">      catch (NoResultException nre)</span>
+      {
+<span class="nc" id="L78">         entity = null;</span>
+<span class="nc" id="L79">      }</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">      if (entity == null)</span>
+      {
+<span class="nc" id="L82">         return Response.status(Status.NOT_FOUND).build();</span>
+      }
+<span class="nc" id="L84">      return Response.ok(entity).build();</span>
+   }
+
+   @GET
+   @Produces( {&quot;application/xml&quot;, &quot;application/json&quot;})
+   @ApiOperation(&quot;Lists all the countries&quot;)
+   public List&lt;Country&gt; listAll(@QueryParam(&quot;start&quot;) Integer startPosition, @QueryParam(&quot;max&quot;) Integer maxResult)
+   {
+<span class="nc" id="L92">      TypedQuery&lt;Country&gt; findAllQuery = em.createQuery(&quot;SELECT DISTINCT c FROM Country c ORDER BY c.id&quot;, Country.class);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">      if (startPosition != null)</span>
+      {
+<span class="nc" id="L95">         findAllQuery.setFirstResult(startPosition);</span>
+      }
+<span class="nc bnc" id="L97" title="All 2 branches missed.">      if (maxResult != null)</span>
+      {
+<span class="nc" id="L99">         findAllQuery.setMaxResults(maxResult);</span>
+      }
+<span class="nc" id="L101">      final List&lt;Country&gt; results = findAllQuery.getResultList();</span>
+<span class="nc" id="L102">      return results;</span>
+   }
+
+   @PUT
+   @Path(&quot;/{id:[0-9][0-9]*}&quot;)
+   @Consumes( {&quot;application/xml&quot;, &quot;application/json&quot;})
+   @ApiOperation(&quot;Updates a country&quot;)
+   public Response update(Country entity)
+   {
+      try
+      {
+<span class="nc" id="L113">         entity = em.merge(entity);</span>
+      }
+<span class="nc" id="L115">      catch (OptimisticLockException e)</span>
+      {
+<span class="nc" id="L117">         return Response.status(Response.Status.CONFLICT).entity(e.getEntity()).build();</span>
+<span class="nc" id="L118">      }</span>
+
+<span class="nc" id="L120">      return Response.noContent().build();</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

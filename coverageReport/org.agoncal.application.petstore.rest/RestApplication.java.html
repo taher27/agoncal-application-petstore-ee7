@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.rest</a> &gt; <span class="el_source">RestApplication.java</span></div><h1>RestApplication.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.rest;
+
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * @author Antonio Goncalves
+ *         http://www.antoniogoncalves.org
+ *         --
+ */
+
+@ApplicationPath(&quot;/rest&quot;)
+<span class="nc" id="L15">public class RestApplication extends Application</span>
+{
+   // ======================================
+   // =          Business methods          =
+   // ======================================
+
+   // TODO Not sure this is still needed for portability in EE 7
+//   @Override
+//   public Set&lt;Class&lt;?&gt;&gt; getClasses()
+//   {
+//      Set&lt;Class&lt;?&gt;&gt; classes = new HashSet&lt;&gt;();
+//      classes.add(CategoryEndpoint.class);
+//      classes.add(CountryEndpoint.class);
+//      classes.add(CustomerEndpoint.class);
+//      classes.add(ItemEndpoint.class);
+//      classes.add(ProductEndpoint.class);
+//      return classes;
+//   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

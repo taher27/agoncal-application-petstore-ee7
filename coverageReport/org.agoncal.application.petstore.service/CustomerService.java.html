@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.service</a> &gt; <span class="el_source">CustomerService.java</span></div><h1>CustomerService.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.service;
+
+import org.agoncal.application.petstore.model.Country;
+import org.agoncal.application.petstore.model.Customer;
+import org.agoncal.application.petstore.util.Loggable;
+
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Antonio Goncalves
+ *         http://www.antoniogoncalves.org
+ *         --
+ */
+
+@Stateless
+@LocalBean
+@Loggable
+public class CustomerService extends AbstractService&lt;Customer&gt; implements Serializable
+{
+
+   // ======================================
+   // =            Constructors            =
+   // ======================================
+
+   public CustomerService()
+   {
+<span class="nc" id="L37">      super(Customer.class);</span>
+<span class="nc" id="L38">   }</span>
+
+   // ======================================
+   // =             Attributes             =
+   // ======================================
+
+
+   // ======================================
+   // =              Public Methods        =
+   // ======================================
+
+   public boolean doesLoginAlreadyExist(@NotNull String login)
+   {
+
+      // Login has to be unique
+<span class="nc" id="L53">      TypedQuery&lt;Customer&gt; typedQuery = entityManager.createNamedQuery(Customer.FIND_BY_LOGIN, Customer.class);</span>
+<span class="nc" id="L54">      typedQuery.setParameter(&quot;login&quot;, login);</span>
+      try
+      {
+<span class="nc" id="L57">         typedQuery.getSingleResult();</span>
+<span class="nc" id="L58">         return true;</span>
+      }
+<span class="nc" id="L60">      catch (NoResultException e)</span>
+      {
+<span class="nc" id="L62">         return false;</span>
+      }
+   }
+
+   public Customer createCustomer(@NotNull Customer customer)
+   {
+<span class="nc" id="L68">      Country country = entityManager.find(Country.class, customer.getHomeAddress().getCountry().getId());</span>
+<span class="nc" id="L69">      customer.getHomeAddress().setCountry(country);</span>
+<span class="nc" id="L70">      entityManager.persist(customer);</span>
+<span class="nc" id="L71">      return customer;</span>
+   }
+
+   public Customer findCustomer(@NotNull String login)
+   {
+<span class="nc" id="L76">      TypedQuery&lt;Customer&gt; typedQuery = entityManager.createNamedQuery(Customer.FIND_BY_LOGIN, Customer.class);</span>
+<span class="nc" id="L77">      typedQuery.setParameter(&quot;login&quot;, login);</span>
+
+      try
+      {
+<span class="nc" id="L81">         return typedQuery.getSingleResult();</span>
+      }
+<span class="nc" id="L83">      catch (NoResultException e)</span>
+      {
+<span class="nc" id="L85">         return null;</span>
+      }
+   }
+
+   public Customer findCustomer(@NotNull String login, @NotNull String password)
+   {
+<span class="nc" id="L91">      TypedQuery&lt;Customer&gt; typedQuery = entityManager.createNamedQuery(Customer.FIND_BY_LOGIN_PASSWORD, Customer.class);</span>
+<span class="nc" id="L92">      typedQuery.setParameter(&quot;login&quot;, login);</span>
+<span class="nc" id="L93">      typedQuery.setParameter(&quot;password&quot;, password);</span>
+
+<span class="nc" id="L95">      return typedQuery.getSingleResult();</span>
+   }
+
+   public List&lt;Customer&gt; findAllCustomers()
+   {
+<span class="nc" id="L100">      TypedQuery&lt;Customer&gt; typedQuery = entityManager.createNamedQuery(Customer.FIND_ALL, Customer.class);</span>
+<span class="nc" id="L101">      return typedQuery.getResultList();</span>
+   }
+
+   public Customer updateCustomer(@NotNull Customer customer)
+   {
+<span class="nc" id="L106">      entityManager.merge(customer);</span>
+<span class="nc" id="L107">      return customer;</span>
+   }
+
+   public void removeCustomer(@NotNull Customer customer)
+   {
+<span class="nc" id="L112">      entityManager.remove(entityManager.merge(customer));</span>
+<span class="nc" id="L113">   }</span>
+
+   public Country findCountry(@NotNull Long countryId)
+   {
+<span class="nc" id="L117">      return entityManager.find(Country.class, countryId);</span>
+   }
+
+   // ======================================
+   // =         Protected methods          =
+   // ======================================
+
+   @Override
+   protected Predicate[] getSearchPredicates(Root&lt;Customer&gt; root, Customer example)
+   {
+<span class="nc" id="L127">      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L128">      List&lt;Predicate&gt; predicatesList = new ArrayList&lt;Predicate&gt;();</span>
+
+<span class="nc" id="L130">      String firstName = example.getFirstName();</span>
+<span class="nc bnc" id="L131" title="All 4 branches missed.">      if (firstName != null &amp;&amp; !&quot;&quot;.equals(firstName))</span>
+      {
+<span class="nc" id="L133">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;firstName&quot;)), '%' + firstName.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L135">      String lastName = example.getLastName();</span>
+<span class="nc bnc" id="L136" title="All 4 branches missed.">      if (lastName != null &amp;&amp; !&quot;&quot;.equals(lastName))</span>
+      {
+<span class="nc" id="L138">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;lastName&quot;)), '%' + lastName.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L140">      String telephone = example.getTelephone();</span>
+<span class="nc bnc" id="L141" title="All 4 branches missed.">      if (telephone != null &amp;&amp; !&quot;&quot;.equals(telephone))</span>
+      {
+<span class="nc" id="L143">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;telephone&quot;)), '%' + telephone.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L145">      String email = example.getEmail();</span>
+<span class="nc bnc" id="L146" title="All 4 branches missed.">      if (email != null &amp;&amp; !&quot;&quot;.equals(email))</span>
+      {
+<span class="nc" id="L148">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;email&quot;)), '%' + email.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L150">      String login = example.getLogin();</span>
+<span class="nc bnc" id="L151" title="All 4 branches missed.">      if (login != null &amp;&amp; !&quot;&quot;.equals(login))</span>
+      {
+<span class="nc" id="L153">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;login&quot;)), '%' + login.toLowerCase() + '%'));</span>
+      }
+
+<span class="nc" id="L156">      return predicatesList.toArray(new Predicate[predicatesList.size()]);</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

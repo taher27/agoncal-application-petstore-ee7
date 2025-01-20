@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreditCard.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.model</a> &gt; <span class="el_source">CreditCard.java</span></div><h1>CreditCard.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.model;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+/**
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
+ */
+
+@Embeddable
+public class CreditCard implements Serializable
+{
+
+   // ======================================
+   // = Attributes =
+   // ======================================
+
+   @Column(length = 30, name = &quot;credit_card_number&quot;, nullable = false)
+   @NotNull
+   @Size(min = 1, max = 30)
+   private String creditCardNumber;
+
+   @Enumerated
+   @Column(name = &quot;credit_card_type&quot;)
+   @NotNull
+   private CreditCardType creditCardType;
+
+   @Column(length = 5, name = &quot;credit_card_expiry_date&quot;, nullable = false)
+   @NotNull
+   @Size(min = 1, max = 5)
+   private String creditCardExpDate;
+
+   // ======================================
+   // = Constructors =
+   // ======================================
+
+   public CreditCard()
+<span class="nc" id="L44">   {</span>
+<span class="nc" id="L45">   }</span>
+
+   public CreditCard(String creditCardNumber, CreditCardType creditCardType, String creditCardExpDate)
+<span class="nc" id="L48">   {</span>
+<span class="nc" id="L49">      this.creditCardNumber = creditCardNumber;</span>
+<span class="nc" id="L50">      this.creditCardType = creditCardType;</span>
+<span class="nc" id="L51">      this.creditCardExpDate = creditCardExpDate;</span>
+<span class="nc" id="L52">   }</span>
+
+   // ======================================
+   // = Getters &amp; setters =
+   // ======================================
+
+   public String getCreditCardNumber()
+   {
+<span class="nc" id="L60">      return creditCardNumber;</span>
+   }
+
+   public void setCreditCardNumber(String creditCardNumber)
+   {
+<span class="nc" id="L65">      this.creditCardNumber = creditCardNumber;</span>
+<span class="nc" id="L66">   }</span>
+
+   public CreditCardType getCreditCardType()
+   {
+<span class="nc" id="L70">      return creditCardType;</span>
+   }
+
+   public void setCreditCardType(CreditCardType creditCardType)
+   {
+<span class="nc" id="L75">      this.creditCardType = creditCardType;</span>
+<span class="nc" id="L76">   }</span>
+
+   public String getCreditCardExpDate()
+   {
+<span class="nc" id="L80">      return creditCardExpDate;</span>
+   }
+
+   public void setCreditCardExpDate(String creditCardExpDate)
+   {
+<span class="nc" id="L85">      this.creditCardExpDate = creditCardExpDate;</span>
+<span class="nc" id="L86">   }</span>
+
+   // ======================================
+   // = Methods hash, equals, toString =
+   // ======================================
+
+   @Override
+   public final boolean equals(Object o)
+   {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">      if (this == o)</span>
+<span class="nc" id="L96">         return true;</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">      if (!(o instanceof CreditCard))</span>
+<span class="nc" id="L98">         return false;</span>
+<span class="nc" id="L99">      CreditCard that = (CreditCard) o;</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">      return Objects.equals(creditCardNumber, that.creditCardNumber) &amp;&amp;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">               Objects.equals(creditCardType, that.creditCardType) &amp;&amp;</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">               Objects.equals(creditCardExpDate, that.creditCardExpDate);</span>
+   }
+
+   @Override
+   public final int hashCode()
+   {
+<span class="nc" id="L108">      return Objects.hash(creditCardNumber, creditCardType, creditCardExpDate);</span>
+   }
+
+   @Override
+   public String toString()
+   {
+<span class="nc" id="L114">      return &quot;CreditCard{&quot; +</span>
+               &quot;creditCardNumber='&quot; + creditCardNumber + '\'' +
+               &quot;, creditCardType=&quot; + creditCardType +
+               &quot;, creditCardExpDate='&quot; + creditCardExpDate + '\'' +
+               '}';
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

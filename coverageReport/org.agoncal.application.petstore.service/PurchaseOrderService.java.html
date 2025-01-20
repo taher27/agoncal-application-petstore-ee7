@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PurchaseOrderService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.service</a> &gt; <span class="el_source">PurchaseOrderService.java</span></div><h1>PurchaseOrderService.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.service;
+
+import org.agoncal.application.petstore.exceptions.ValidationException;
+import org.agoncal.application.petstore.model.*;
+import org.agoncal.application.petstore.util.Loggable;
+import org.agoncal.application.petstore.view.shopping.ShoppingCartItem;
+
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * @author Antonio Goncalves
+ *         http://www.antoniogoncalves.org
+ *         --
+ */
+
+@Stateless
+@LocalBean
+@Loggable
+<span class="nc" id="L30">public class PurchaseOrderService extends AbstractService&lt;PurchaseOrder&gt;implements Serializable</span>
+{
+
+   // ======================================
+   // =             Attributes             =
+   // ======================================
+
+
+   // ======================================
+   // =              Public Methods        =
+   // ======================================
+
+   public PurchaseOrder createOrder(@NotNull Customer customer, @NotNull CreditCard creditCard, final List&lt;ShoppingCartItem&gt; cartItems)
+   {
+
+      // OMake sure the object is valid
+<span class="nc bnc" id="L46" title="All 4 branches missed.">      if (cartItems == null || cartItems.size() == 0)</span>
+<span class="nc" id="L47">         throw new ValidationException(&quot;Shopping cart is empty&quot;); // TODO exception bean validation</span>
+
+      // Creating the order
+<span class="nc" id="L50">      Address deliveryAddress = customer.getHomeAddress();</span>
+<span class="nc" id="L51">      Country country = entityManager.find(Country.class, customer.getHomeAddress().getCountry().getId());</span>
+<span class="nc" id="L52">      deliveryAddress.setCountry(country);</span>
+<span class="nc" id="L53">      PurchaseOrder order = new PurchaseOrder(entityManager.merge(customer), creditCard, deliveryAddress);</span>
+
+      // From the shopping cart we create the order lines
+<span class="nc" id="L56">      Set&lt;OrderLine&gt; orderLines = new HashSet&lt;&gt;();</span>
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">      for (ShoppingCartItem cartItem : cartItems)</span>
+      {
+<span class="nc" id="L60">         orderLines.add(new OrderLine(cartItem.getQuantity(), entityManager.merge(cartItem.getItem())));</span>
+<span class="nc" id="L61">      }</span>
+<span class="nc" id="L62">      order.setOrderLines(orderLines);</span>
+
+      // Persists the object to the database
+<span class="nc" id="L65">      entityManager.persist(order);</span>
+
+<span class="nc" id="L67">      return order;</span>
+   }
+
+   public PurchaseOrder findOrder(@NotNull Long orderId)
+   {
+<span class="nc" id="L72">      return entityManager.find(PurchaseOrder.class, orderId);</span>
+   }
+
+   public List&lt;PurchaseOrder&gt; findAllOrders()
+   {
+<span class="nc" id="L77">      TypedQuery&lt;PurchaseOrder&gt; typedQuery = entityManager.createNamedQuery(PurchaseOrder.FIND_ALL, PurchaseOrder.class);</span>
+<span class="nc" id="L78">      return typedQuery.getResultList();</span>
+   }
+
+   public void removeOrder(@NotNull PurchaseOrder order)
+   {
+<span class="nc" id="L83">      entityManager.remove(entityManager.merge(order));</span>
+<span class="nc" id="L84">   }</span>
+
+   // ======================================
+   // =         Protected methods          =
+   // ======================================
+
+   @Override
+   protected Predicate[] getSearchPredicates(Root&lt;PurchaseOrder&gt; root, PurchaseOrder example)
+   {
+<span class="nc" id="L93">      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L94">      List&lt;Predicate&gt; predicatesList = new ArrayList&lt;Predicate&gt;();</span>
+
+<span class="nc" id="L96">      String street1 = example.getCustomer().getHomeAddress().getStreet1();</span>
+<span class="nc bnc" id="L97" title="All 4 branches missed.">      if (street1 != null &amp;&amp; !&quot;&quot;.equals(street1))</span>
+      {
+<span class="nc" id="L99">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;street1&quot;)), '%' + street1.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L101">      String street2 = example.getCustomer().getHomeAddress().getStreet2();</span>
+<span class="nc bnc" id="L102" title="All 4 branches missed.">      if (street2 != null &amp;&amp; !&quot;&quot;.equals(street2))</span>
+      {
+<span class="nc" id="L104">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;street2&quot;)), '%' + street2.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L106">      String city = example.getCustomer().getHomeAddress().getCity();</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">      if (city != null &amp;&amp; !&quot;&quot;.equals(city))</span>
+      {
+<span class="nc" id="L109">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;city&quot;)), '%' + city.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L111">      String state = example.getCustomer().getHomeAddress().getState();</span>
+<span class="nc bnc" id="L112" title="All 4 branches missed.">      if (state != null &amp;&amp; !&quot;&quot;.equals(state))</span>
+      {
+<span class="nc" id="L114">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;state&quot;)), '%' + state.toLowerCase() + '%'));</span>
+      }
+<span class="nc" id="L116">      String zipcode = example.getCustomer().getHomeAddress().getZipcode();</span>
+<span class="nc bnc" id="L117" title="All 4 branches missed.">      if (zipcode != null &amp;&amp; !&quot;&quot;.equals(zipcode))</span>
+      {
+<span class="nc" id="L119">         predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;zipcode&quot;)), '%' + zipcode.toLowerCase() + '%'));</span>
+      }
+
+<span class="nc" id="L122">      return predicatesList.toArray(new Predicate[predicatesList.size()]);</span>
+   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
